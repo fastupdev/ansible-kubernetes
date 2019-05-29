@@ -10,5 +10,8 @@ masternodes
 workernodes
 
 [kubev1:vars]
-ansible_password= 
+# Add the remote_user password
+ansible_password=
+
+# Add the root password
 ansible_become_password= 
