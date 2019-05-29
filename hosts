@@ -1,14 +1,14 @@
 [masternodes]
-18.144.66.8
+master1.host
 
 [workernodes]
-54.219.137.127
-52.53.207.122
+woker1.host
+worker2.host
 
 [kubev1:children]
 masternodes
 workernodes
 
 [kubev1:vars]
-ansible_password= levvel123
-ansible_become_password= levvel123
+ansible_password= 
+ansible_become_password= 
