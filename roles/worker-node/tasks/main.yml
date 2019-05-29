@@ -1,0 +1,2 @@
+---
+- include_tasks: worker-node.yml

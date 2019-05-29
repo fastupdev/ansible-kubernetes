@@ -1,0 +1,85 @@
+---
+- include_vars: RedHat.yml
+
+- name: yum-clean-metadata
+  command: yum clean metadata
+  args:
+    warn: no
+
+- name: Clean old SElinux
+  yum:
+    name: ['docker', 'docker-common', 'container-selinux', 'docker-selinux', 'docker-engine']
+    state: absent
+  become: True
+
+- name: updating SElinux to 2.9
+  yum:
+    name: "{{ selinux_package }}"
+    state: present
+    update_cache: true
+  become: true
+
+- name: Install utils
+  yum:
+    name: ['yum-utils', 'device-mapper-persistent-data', 'lvm2']
+    state: present
+    update_cache: true
+  become: true
+
+- name: Add Docker repo
+  get_url:
+    url: "{{ docker_package }}"
+    dest: /etc/yum.repos.d/docer-ce.repo
+  become: yes
+
+- name: Install Docker on Master and Worker nodes
+  yum:
+    name: docker-ce
+    state: latest
+  become: true
+
+- name: Start Docker on Master and Worker nodes
+  service:
+    name: docker
+    state: started
+  become: true
+
+- name: Ensure SELinux is set to enforcing mode
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: SELINUX=permissive
+  become: true
+
+- name: Reboot Machines
+  reboot:
+    reboot_timeout: 1800
+  become: true
+
+- name: Add Kubernetes to YUM repository
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes YUM repository
+    baseurl: https://packages.cloud.google.com/yum/repos/{{ kube_version }}
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    gpgcheck: yes
+  become: true
+
+- name: Install kubelet and Kubeadm
+  yum:
+    name: ['kubelet-{{ version }}', 'kubeadm-{{ version }}']
+    state: present
+    update_cache: true
+  become: true
+
+- name: Start kubelet Service
+  service:
+    name: kubelet
+    enabled: yes
+    state: started
+  become: true
+
+- name: Disable swap
+  command: swapoff -a
+  become: true
+  notify: docker-restart

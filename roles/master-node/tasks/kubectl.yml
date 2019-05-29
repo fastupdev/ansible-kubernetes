@@ -1,0 +1,18 @@
+---
+- include_vars: kubectl-vars.yml
+- name: Install Kubectl
+  yum:
+    name: ['kubectl-{{ version }}']
+    state: present
+    update_cache: true
+  become: true
+
+- name: Test Kubectl with version tag
+  shell: kubectl version --client
+  register: result
+  become: True
+
+- name: Print kubectl version
+  debug:
+    msg: "kubectl client Version: {{ result.stdout }}"
+  

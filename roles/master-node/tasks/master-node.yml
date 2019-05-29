@@ -1,0 +1,55 @@
+---
+
+- include_vars: master-vars.yml
+
+- name: Cluster Initialization
+  shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> initialized.txt
+  args:
+    chdir: $HOME
+    creates: initialized.txt
+  become: True
+
+- name: Create .kube directory  
+  file:
+    path: $HOME/.kube
+    state: directory
+    mode: 0755
+  become: True
+
+- name: Copy admin.conf to user's kube config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: $HOME/.kube/config
+    remote_src: yes
+  become: True
+
+- name: User id
+  command: id -u
+  register: userid
+  become: True
+
+- name: Group Id
+  command: id -g
+  register: groupid
+  become: True
+
+- name: Change permission on .kube/config
+  file: 
+    path: $HOME/.kube/config
+    owner: "{{ userid.stdout }}"
+    group: "{{ groupid.stdout }}"
+  become: True
+
+- name: Configure Pod network with Flannel
+  shell: kubectl apply -f {{ flannel_url }}
+  args:
+    chdir: $HOME
+    creates: pod_network_setup.txt
+  become: True
+
+- name: Fetch the kubeconfig
+  fetch:
+    src: /root/.kube/config
+    dest: "{{ playbook_dir }}/"
+    flat: yes
+  become: True

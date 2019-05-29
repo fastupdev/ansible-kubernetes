@@ -1,0 +1,7 @@
+---
+
+- include_tasks: common-rhel.yml
+  when: ansible_pkg_mgr == 'yum' or ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+- include_tasks: common-debian.yml
+  when: ansible_pkg_mgr == 'apt'
