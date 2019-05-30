@@ -42,10 +42,10 @@ After the Hosts Configuration, add the following in the **hosts** file to run pl
 3. Add the **_ansible\_become\_password_** in the **hosts** file for privilage escaltion.
 
 #### Network Configuration
-In **Ansible Kubernetes Playbook** you can configure Kubernetes CNI plugin with either Flannel, Calico or Canal in the **hosts** file,
+**Ansible Kubernetes Playbook** can configure Kubernetes CNI plugin with either Flannel, Calico or Canal in the **hosts** file,
 ```CNI_network_type= flannel|calico|canal ```
 
-##### Quick Note on CNI Plugins
+#### Quick Note on CNI Plugins
 **Flannel** is a straightforward plugin that configures a layer 3 IPv4 overlay network. Flannel uses Docker bridge for the Pods to communicate within the same host, while pods on different hosts communicate using flanneld with a default VXLAN by encapsulating the traffic in UDP packets to route to the appropriate destination.
 
 **Calico** is most flexible and popular Kubernetes CNI plugin that configures a layer 3 network that uses the BGP(broder gateway protocol) routing protocol to route packets between hosts by eleminating an extra layer of encapsulation. Calico is more easy for conventional debugging standard debugging tools when there is a network problem. Calico can also integrate with a _service mesh_ like, **Istio** to provide extra security and control over the network policy.
@@ -57,6 +57,8 @@ In **Ansible Kubernetes Playbook** you can configure Kubernetes CNI plugin with 
 Once all the configurations are in the right place, run the following command to install Kubernetes 
 
 ``` ansible-playbook main.yml ```
+
+Keeping time contsraint in mind while retrying the playbook, add the ```--skip-tags=common-tasks``` to skip the common packages tasks.
 
 Sit back and relax for the playbook to finish with no errors :smile:!!!
 
