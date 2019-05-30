@@ -1,5 +1,4 @@
 ---
-
 - include_vars: master-vars.yml
 
 - name: Cluster Initialization
@@ -8,6 +7,15 @@
     chdir: $HOME
     creates: initialized.txt
   become: True
+  when: CNI_network_type  == "flannel" or CNI_network_type == "canal"
+
+- name: Cluster Initialization
+  shell: kubeadm init --pod-network-cidr=192.168.0.0/16 >> initialized.txt
+  args:
+    chdir: $HOME
+    creates: initialized.txt
+  become: True
+  when: CNI_network_type  == "calico"
 
 - name: Create .kube directory  
   file:
@@ -18,7 +26,7 @@
 
 - name: Copy admin.conf to user's kube config
   copy:
-    src: /etc/kubernetes/admin.conf
+    src: "{{ kubeconfig_src }}"
     dest: $HOME/.kube/config
     remote_src: yes
   become: True
@@ -38,13 +46,6 @@
     path: $HOME/.kube/config
     owner: "{{ userid.stdout }}"
     group: "{{ groupid.stdout }}"
-  become: True
-
-- name: Configure Pod network with Flannel
-  shell: kubectl apply -f {{ flannel_url }}
-  args:
-    chdir: $HOME
-    creates: pod_network_setup.txt
   become: True
 
 - name: Fetch the kubeconfig

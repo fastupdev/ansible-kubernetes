@@ -2,3 +2,5 @@
 - include_tasks: kubectl.yml
 
 - include_tasks: master-node.yml
+
+- include_tasks: cluster-network.yml

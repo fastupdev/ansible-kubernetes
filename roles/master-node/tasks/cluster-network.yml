@@ -1,0 +1,30 @@
+---
+- include_vars: network.yml
+
+- name: Configure Pod network with {{ CNI_network_type }}
+  shell: kubectl apply -f {{ flannel_url }}
+  args:
+    chdir: $HOME
+    creates: pod_network_setup.txt
+  become: True
+  when: CNI_network_type == "flannel"
+
+- name: Configure Pod network and rbac with {{ CNI_network_type }}
+  shell: |
+    kubectl apply -f {{ calico_rbac }}
+    kubectl apply -f {{ calico_url }}
+  args:
+    chdir: $HOME
+    creates: pod_network_rbac_setup.txt
+  become: True
+  when: CNI_network_type == "calico"
+
+- name: Configure Pod network and rbac with {{ CNI_network_type }}
+  shell: |
+    kubectl apply -f {{ canal_rbac }}
+    kubectl apply -f {{ canal_url }}
+  args:
+    chdir: $HOME
+    creates: pod_network_rbac_setup.txt
+  become: True
+  when: CNI_network_type == "canal"

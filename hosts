@@ -1,9 +1,9 @@
 [masternodes]
-54.153.14.224
+54.153.89.236
 
 [workernodes]
-54.193.103.140
-54.67.100.211
+54.183.226.247
+13.52.98.184
 
 [kubev1:children]
 masternodes
@@ -15,3 +15,13 @@ ansible_password=levvel123
 
 # Add the root password
 ansible_become_password=levvel123
+
+#######################################################################
+# Network Configuration                                               # 
+#                                                                     #
+# Choose a Netowrk CNI to install on cluster in the following options #
+# 1. flannel                                                          #
+# 2. calico                                                           #
+# 3. canal                                                            #
+#######################################################################
+CNI_network_type= canal
