@@ -18,10 +18,10 @@
     state: present
     update_cache: true
   become: true
-
+      
 - name: Install utils
   yum:
-    name: ['yum-utils', 'device-mapper-persistent-data', 'lvm2']
+    name: ['yum-utils', 'device-mapper-persistent-data', 'lvm2', 'wget', 'openssl-devel', 'bzip2-devel', 'libffi-devel', 'rsync']
     state: present
     update_cache: true
   become: true
@@ -65,21 +65,21 @@
     gpgcheck: yes
   become: true
 
-- name: Install kubelet and Kubeadm
+- name: Install Kubelet and Kubeadm
   yum:
     name: ['kubelet-{{ version }}', 'kubeadm-{{ version }}']
     state: present
     update_cache: true
   become: true
 
-- name: Start kubelet Service
+- name: Start Kubelet Service
   service:
     name: kubelet
     enabled: yes
     state: started
   become: true
 
-- name: Disable swap
+- name: Disable swap and restart Docker
   command: swapoff -a
   become: true
   notify: docker-restart

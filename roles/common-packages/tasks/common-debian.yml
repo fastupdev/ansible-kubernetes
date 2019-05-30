@@ -1,72 +1,73 @@
 ---
 - include_vars: Debian.yml
 
+- name: Install Aptitude
+  apt:
+    name: aptitude
+    state: present
+  become: True
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+  become: True
+
 - name: Install packages that allow apt to be used over HTTPS
   apt:
-    name: "{{ packages }}"
+    name: ['python-apt', 'apt-transport-https', 'ca-certificates', 'curl', 'gnupg-agent', 'software-properties-common', 'wget', 'rsync']
     state: present
     update_cache: yes
-  vars:
-    packages:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - gnupg-agent
-    - software-properties-common
-  become: true
+  become: True
 
-- name: Add an apt signing key for Docker
+- name: Add Docker apt signing
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
-  become: true
+  become: True
 
-- name: Add apt repository for stable version
+- name: Add Docker stable version apt repository
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
     state: present
-  become: true
+  become: True
 
-- name: Install docker and its dependecies
+- name: Install Docker and its dependecies
   apt: 
-    name: "{{ packages }}"
+    name: ['docker-ce', 'docker-ce-cli', 'containerd.io']
     state: present
     update_cache: yes
-  vars:
-    packages:
-    - docker-ce 
-    - docker-ce-cli 
-    - containerd.io
-  notify:
-    - docker status
   become: true
 
-- name: add Kubernetes apt-key
+- name: Add Kubernetes apt-key
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     state: present
   become: true
 
-- name: add Kubernetes' APT repository
+- name: add Kubernetes stable version apt repository
   apt_repository:
     repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
     state: present
     filename: 'kubernetes'
   become: true
 
-- name: install kubelet
+- name: Install Kubelet and Kubeadm
   apt:
-    name: "{{item }}"
+    name: ['kubelet', 'kubeadm']
     state: present
     update_cache: true
   become: true
-  with_items:
-    - kubelet={{ version }}
-    - kubeadm={{ version }}
 
-- name: Start kubelet
+- name: Start Kubelet Service
   service:
     name: kubelet
     state: started
     enabled: True
   become: true
+
+- name: Disable swap
+  command: swapoff -a
+  become: true
+  notify:
+  - docker-restart

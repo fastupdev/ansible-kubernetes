@@ -3,12 +3,12 @@
 ### Introduction
 The Ansible Kubernetes Playbook is an introductory version to install HA Kubernetes cluster in the following operating systems.
 1. Red Hat Linux
-2. CentOS 
-2. Ubuntu (_work in progress_)
-3. Debian (_work in progress_)
+2. Red Hat CentOS Linux
+2. Ubuntu 
+3. Debian
 5. Windows (_work in progress_)
 
-**Note**: Currently the playbook can only install a single master Kuberentes cluster on Red Hat or CentOS Linux machines, it is in progress for the other operating systems.
+**Note**: Currently the playbook can only install a single master Kuberentes cluster on Red Hat Linux, Red Hat CentOS Linux machines, Ubuntu and Debian it is in progress for the Windows Operating Systems.
 
 ### Prerequisites
 To run the above playbook, following are the prerequisites before even we run the playbook,
@@ -41,4 +41,4 @@ Once all the configurations are in the right place, run the following command
 
 Sit back and relax for the playbook to finish with no errors :smile:!!!
 
-**Note**: This playbook is tested on Red Hat and CentOS Linux servers.
+**Note**: This playbook is tested on Red Hat Linux, CentOS Linux servers, Ubuntu and Debian Operating Systems.

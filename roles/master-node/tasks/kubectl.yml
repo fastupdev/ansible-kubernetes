@@ -1,11 +1,21 @@
 ---
 - include_vars: kubectl-vars.yml
-- name: Install Kubectl
+
+- name: Install Kubectl Rhel
   yum:
-    name: ['kubectl-{{ version }}']
+    name: ['kubectl-{{ rhelversion }}']
     state: present
     update_cache: true
   become: true
+  when: ansible_pkg_mgr == 'yum' or ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+- name: Install Kubectl Debian
+  apt:
+    name: ['kubectl']
+    state: present
+    update_cache: true
+  become: true
+  when: ansible_pkg_mgr == 'apt' or ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Test Kubectl with version tag
   shell: kubectl version --client

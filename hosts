@@ -1,9 +1,9 @@
 [masternodes]
-master1.host
+54.153.14.224
 
 [workernodes]
-woker1.host
-worker2.host
+54.193.103.140
+54.67.100.211
 
 [kubev1:children]
 masternodes
@@ -11,7 +11,7 @@ workernodes
 
 [kubev1:vars]
 # Add the remote_user password
-ansible_password=
+ansible_password=levvel123
 
 # Add the root password
-ansible_become_password= 
+ansible_become_password=levvel123
