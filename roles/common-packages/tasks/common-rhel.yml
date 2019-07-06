@@ -8,11 +8,11 @@
 
 - name: Clean old SElinux
   yum:
-    name: ['docker', 'docker-common', 'container-selinux', 'docker-selinux', 'docker-engine']
+    name: ['docker', 'docker-common', 'container-selinux', 'docker-selinux', 'docker-engine', 'docker-client', 'docker-client-latest', 'docker-latest', 'docker-latest-logrotate', 'docker-logrotate']
     state: absent
   become: True
 
-- name: updating SElinux to 2.9
+- name: updating SElinux to 2.7
   yum:
     name: "{{ selinux_package }}"
     state: present
