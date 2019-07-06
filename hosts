@@ -1,9 +1,9 @@
 [masternodes]
-54.153.89.236
+18.144.66.126
 
 [workernodes]
-54.183.226.247
-13.52.98.184
+18.144.1.118
+13.52.186.49
 
 [kubev1:children]
 masternodes
