@@ -1,0 +1,81 @@
+---
+
+- name: Create a Nginx Container
+  shell: kubectl run nginx --image=nginx
+  become: True
+  tags: 
+  - cluster-test
+
+- name: Get the pod name
+  shell: kubectl get pods -l run=nginx --no-headers | awk '{print $1}'
+  register: result.podname
+  become: True
+  tags:
+  - cluster-test
+
+- name: check the pods status
+  shell: kubectl get pods {{ result.podname }} --no-headers -o custom-columns=STATUS:.status.phase
+  register: result.podstatus
+  until: result.podstatus.stdout.find("Running") != -1
+  retries: 10
+  delay: 10
+  become: True
+  tags:
+  - cluster-test
+
+- name: Show nginx kubectl get output
+  debug:
+    msg: "{{ result.podstatus.stdout_lines }}"
+  tags:
+  - cluster-test
+
+- name: Delete nginx service, if already there
+  shell: kubectl delete service/nginx -n default
+  ignore_errors: true
+  become: True
+  tags:
+    - cluster-test
+
+- name: Create a nginx service
+  shell: kubectl expose deployment nginx --port 80 --type NodePort
+  become: True
+  tags:
+    - cluster-test
+
+- name: Gather nginx node facts
+  shell: kubectl get svc nginx --output=jsonpath='{range .spec.ports[0]}{.nodePort}'
+  register: nginx_nodeport_result
+  become: True
+  tags:
+    - cluster-test
+
+- name: Nginx NodePort
+  debug:
+    msg: "The nginx nodePort is: {{ nginx_nodeport_result.stdout }}"
+  tags:
+    - cluster-test
+
+- name: Nginx pod - node ip
+  shell: kubectl get pods --no-header -o custom-columns=Nodename:.spec.nodeName
+  register: result.pod.nodename
+  become: True
+  tags:
+    - cluster-test
+
+- name: Make an HTTP request using the external IP address and the nginx node port
+  uri:
+    url: "http://{{result.pod.nodename}}:{{ nginx_nodeport_result.stdout }}"
+  register: worker_result
+  until: worker_result.status == 200
+  retries: 5
+  delay: 5
+  become: True
+  tags:
+    - cluster-test
+
+- name: Response from nginx
+  debug:
+    msg: "{{ worker_result }}"
+  tags:
+    - cluster-test
+

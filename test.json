@@ -1,0 +1,128 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "creationTimestamp": "2019-07-06T21:30:47Z",
+        "generateName": "nginx-7db9fccd9b-",
+        "labels": {
+            "pod-template-hash": "7db9fccd9b",
+            "run": "nginx"
+        },
+        "name": "nginx-7db9fccd9b-pwh5m",
+        "namespace": "default",
+        "ownerReferences": [
+            {
+                "apiVersion": "apps/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "ReplicaSet",
+                "name": "nginx-7db9fccd9b",
+                "uid": "51e44251-a035-11e9-8ae7-080027f2c43d"
+            }
+        ],
+        "resourceVersion": "4129",
+        "selfLink": "/api/v1/namespaces/default/pods/nginx-7db9fccd9b-pwh5m",
+        "uid": "51e6c3d7-a035-11e9-8ae7-080027f2c43d"
+    },
+    "spec": {
+        "containers": [
+            {
+                "image": "nginx",
+                "imagePullPolicy": "Always",
+                "name": "nginx",
+                "resources": {},
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "default-token-w9q7m",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "minikube",
+        "priority": 0,
+        "restartPolicy": "Always",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            }
+        ],
+        "volumes": [
+            {
+                "name": "default-token-w9q7m",
+                "secret": {
+                    "defaultMode": 420,
+                    "secretName": "default-token-w9q7m"
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2019-07-06T21:30:47Z",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2019-07-06T21:31:45Z",
+                "status": "True",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2019-07-06T21:31:45Z",
+                "status": "True",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2019-07-06T21:30:47Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "containerID": "docker://515eefd22085cfc0cdff2cba9824dc014c94fd2c1bf7be2688a75a3e6933a2c6",
+                "image": "nginx:latest",
+                "imageID": "docker-pullable://nginx@sha256:96fb261b66270b900ea5a2c17a26abbfabe95506e73c3a3c65869a6dbe83223a",
+                "lastState": {},
+                "name": "nginx",
+                "ready": true,
+                "restartCount": 0,
+                "state": {
+                    "running": {
+                        "startedAt": "2019-07-06T21:31:44Z"
+                    }
+                }
+            }
+        ],
+        "hostIP": "10.0.2.15",
+        "phase": "Running",
+        "podIP": "172.17.0.7",
+        "qosClass": "BestEffort",
+        "startTime": "2019-07-06T21:30:47Z"
+    }
+}
